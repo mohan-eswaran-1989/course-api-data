@@ -1,5 +1,6 @@
 package io.javabrains.springBootDemo.course;
 
+import io.javabrains.springBootDemo.topic.Topic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,30 +14,32 @@ public class CourseController {
     private CourseService courseService;
 
     @GetMapping("/topics/{topicId}/courses")
-    public List<Course> getAllTopics(@PathVariable String topicId) {
-        return courseService.getAllCourses();
+    public List<Course> getAllCourses(@PathVariable String topicId) {
+        return courseService.getAllCourses(topicId);
     }
 
-    @GetMapping("/topics/{id}")
-    public Optional<Course> getTopic(@PathVariable String id) {
-        return courseService.getCourse(id);
+    @GetMapping("/topics/{topicId}courses/{courseId}")
+    public Optional<Course> getCourse(@PathVariable String courseId) {
+        return courseService.getCourse(courseId);
     }
 
-    @PostMapping("/topics")
-    public void addNewTopic(@RequestBody Course course) {
+    @PostMapping("/topics/{topicId}/courses")
+    public void addNewCourse(@RequestBody Course course , @PathVariable String topicId) {
+        course.setTopic(new Topic(topicId," "," "));
         courseService.addCourse(course);
     }
 
     //	@RequestMapping(method = RequestMethod.PUT , value = "/topics/{id}")
-    @PutMapping("/topics/{id}")
-    public void updateTopic(@RequestBody Course course, @PathVariable String id) {
-        courseService.updateCourse(id, course);
+    @PutMapping("/topics/{topicId}/courses/{courseId}")
+    public void updateCourse(@RequestBody Course course, @PathVariable String topicId) {
+        course.setTopic(new Topic(topicId," "," "));
+        courseService.updateCourse(course);
 
     }
 
-    @DeleteMapping("/topics/{id}")
-    public void deleteTopic(@PathVariable String id) {
-        courseService.deleteCourse(id);
+    @DeleteMapping("/topics/{topicId}/courses/{courseId}")
+    public void deleteCourse(@PathVariable String topicId) {
+        courseService.deleteCourse(topicId);
     }
 
 }
